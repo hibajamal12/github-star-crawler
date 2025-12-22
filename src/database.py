@@ -1,4 +1,3 @@
-# src/database.py - CORRECTED VERSION
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
@@ -35,25 +34,23 @@ class DatabaseManager:
                         'application_name': 'github_crawler'
                     }
                 )
-                
-                # Test connection - IMPORTANT: Use text() for raw SQL
+
                 with self.engine.connect() as conn:
                     result = conn.execute(text("SELECT 1"))
-                    result.fetchone()  # Consume result
-                
-                print("✅ Database connection established successfully")
+                    result.fetchone()  
+                print(" Database connection established successfully")
                 break
                 
             except OperationalError as e:
                 if attempt < max_retries - 1:
-                    print(f"⚠️ Database connection failed (attempt {attempt + 1}/{max_retries}): {str(e)[:100]}")
+                    print(f" Database connection failed (attempt {attempt + 1}/{max_retries}): {str(e)[:100]}")
                     time.sleep(retry_delay * (attempt + 1))
                 else:
-                    print(f"❌ Failed to connect to database after {max_retries} attempts")
+                    print(f" Failed to connect to database after {max_retries} attempts")
                     print(f"Database URL: {Config.DATABASE_URL}")
                     raise
             except Exception as e:
-                print(f"❌ Unexpected error: {type(e).__name__}: {str(e)[:100]}")
+                print(f" Unexpected error: {type(e).__name__}: {str(e)[:100]}")
                 raise
     
     @property
@@ -72,9 +69,9 @@ class DatabaseManager:
         """Create all tables"""
         try:
             Base.metadata.create_all(self.engine)
-            print("✅ Database tables created")
+            print(" Database tables created")
         except Exception as e:
-            print(f"❌ Error creating tables: {e}")
+            print(f" Error creating tables: {e}")
             raise
     
     def close(self):

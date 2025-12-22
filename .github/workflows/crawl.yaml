@@ -51,15 +51,16 @@ jobs:
       run: |
         python scripts/setup_db.py
     
-    - name: 🕷️ Run crawler (small test)
+    - name: 🕷️ Run crawler (with proper token)
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/github_crawler
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TOTAL_REPOS: 100  
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+        TOTAL_REPOS: 1000  
       run: |
-        echo "Starting crawler with GitHub token: ${GITHUB_TOKEN:0:10}..."
+        echo "Starting GitHub repository crawler..."
+        echo "GitHub token available: ${#GITHUB_TOKEN} characters"
         python src/crawler.py
-    
+        
     - name:  Export data
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/github_crawler
